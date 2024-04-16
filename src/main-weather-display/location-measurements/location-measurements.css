@@ -1,0 +1,21 @@
+.location-measurements-title {
+    text-align: left;
+}
+
+.location-measurements-div {
+    margin: 10px;
+    display: flex;
+}
+
+.graph-div {
+    flex: 1;
+    margin-top: 50px;
+}
+
+.cards-div {
+    flex: 3
+}
+
+.location-measurements-wrapper-div {
+    margin: 10px;
+}
