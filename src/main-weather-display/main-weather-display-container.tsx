@@ -10,7 +10,7 @@ const MainWeatherDisplayContainer = () => {
   const airQualityData: MutableRefObject<{}> = useRef({});
   const [loading, setLoading]: Array<boolean | Dispatch<SetStateAction<boolean>>> = useState(false);
 
-  const measurementDataForLocation: MutableRefObject<{}> = useRef({});
+  const measurementData: MutableRefObject<{}> = useRef({});
   useEffect((): void => {
     fetchData();
   }, []);
@@ -23,12 +23,11 @@ const MainWeatherDisplayContainer = () => {
   }
 
   const getMeasurementData = async (locationId: number) => { 
-    const getMeasurementDataForLocation = `https://api.openaq.org/v2/locations/${locationId}?limit=100&page=1&offset=0&sort=desc&radius=1000&order_by=lastUpdated&dumpRaw=false`;
+    const getMeasurementData = `https://api.openaq.org/v2/locations/${locationId}?limit=100&page=1&offset=0&sort=desc&radius=1000&order_by=lastUpdated&dumpRaw=false`;
     
-    const res = await fetch(getMeasurementDataForLocation);
+    const res = await fetch(getMeasurementData);
     
-    const measurementData = res.json();
-    measurementDataForLocation.current = measurementData;
+    measurementData.current = res.json();
     return measurementData;
   }
 
@@ -49,7 +48,7 @@ const MainWeatherDisplayContainer = () => {
     return (
       <div className="main-weather-display-container-div">
         <h1 className="main-air-quality-display-title">Main Air Quality Display</h1>
-        <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} measurementDataForLocation={measurementDataForLocation} navigate={navigate} onLoad={onLoad} />
+        <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
       </div>
     );
 
