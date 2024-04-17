@@ -114,8 +114,8 @@ const WorldMap = (props: any) => {
                 const seeMoreButton = document.getElementById('more-info-button');
                 seeMoreButton?.addEventListener('click', async () => {
                   props.onLoad();
-                  const measurementDataPromise = await props.getMeasurementData(selectedLocationId.current);
-                  const measurementData = await measurementDataPromise.current;
+                  const measurementDataPromise: MutableRefObject<{}> = await props.getMeasurementData(selectedLocationId.current);
+                  const measurementData = await measurementDataPromise.current; // vscode thinks the await here is not required. it actually is required
 
                   props.navigate(`/measurements/${selectedLocationId.current}`, {
                     state: {
