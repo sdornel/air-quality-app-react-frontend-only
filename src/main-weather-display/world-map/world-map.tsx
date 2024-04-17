@@ -36,6 +36,8 @@ const WorldMap = (props: any) => {
           if (error) throw error;
           if (!map.hasImage('purple-dot')) map.addImage('purple-dot', image);
 
+          console.log('props', props); // keeping this here to debug a very rare issue
+          console.log('props.airQualityData', props.airQualityData); // keeping this here to debug a very rare issue
           const features: Array<Feature<Geometry, GeoJsonProperties>> = props.airQualityData.current.map(data => ({
             type: 'Feature',
             geometry: {
