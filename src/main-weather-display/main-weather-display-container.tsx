@@ -47,7 +47,7 @@ const MainWeatherDisplayContainer = () => {
   } else {
     return (
       <div className="main-weather-display-container-div">
-        <h1 className="main-air-quality-display-title">Main Air Quality Display</h1>
+        <h1 className="main-air-quality-display-title">Air Quality Application</h1>
         <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
       </div>
     );

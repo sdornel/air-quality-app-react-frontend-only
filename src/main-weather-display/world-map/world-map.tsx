@@ -45,10 +45,10 @@ const WorldMap = (props: any) => {
             properties: {
                 id: data.id,
                 description: `
-                  <div>
+                  <div style="text-align: left;">
                     <div className="location-data-div">
                       <button class="more-info-button" id="more-info-button">More info</button>
-                      <p>id: ${data.id}</p>
+                      <p>Latest PM2.5 Level: ${data.parameters[0].average.toFixed(2)} µg/m³</p>
                       <p>Country: ${data.country || 'N/A'}<p/>
                       <p>City: ${data.city || 'N/A'}<p/>
                       <p>Location: ${data.name || 'N/A'}<p/>
@@ -86,7 +86,6 @@ const WorldMap = (props: any) => {
                   layout: {
                       'icon-image': 'purple-dot',
                       'icon-allow-overlap': true,
-                      // 'icon-size': 0.03
                       'icon-size': [
                         "interpolate", ["linear"], ["zoom"],
                         1, 0.02,  // At zoom level 1, icon size is 0.02
@@ -116,7 +115,7 @@ const WorldMap = (props: any) => {
                 seeMoreButton?.addEventListener('click', async () => {
                   props.onLoad();
                   const measurementDataPromise: MutableRefObject<{}> = await props.getMeasurementData(selectedLocationId.current);
-                  const measurementData = await measurementDataPromise.current; // vscode thinks the await here is not required. it actually is required
+                  const measurementData = await measurementDataPromise.current; // vscode thinks the await here is not required. it IS required
 
                   props.navigate(`/measurements/${selectedLocationId.current}`, {
                     state: {
