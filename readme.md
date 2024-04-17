@@ -1,9 +1,6 @@
-Technology used for React
-mapbox gl
-typescript
-jest
+Application made with React that measures air quality across the globe. You can also view individual location data by clicking on the purple dots throughout the world map.
 
-
-TODO:
-add styling. this app needs to look pretty
-add some information on air quality and why it is important to measure. mention pm25 and pm10
+To start this application:
+1. Ensure you have node and npm installed
+2. type npm install in the terminal at the root of this project
+3. type npm start
