@@ -50,22 +50,21 @@ const MainWeatherDisplayContainer = () => {
     return (
       <div>
         <h1 className="main-air-quality-display-title">Air Quality Application</h1>
-      
-        {/* <div className="main-weather-display-container-div"> */}
+        <div className="main-weather-display-container-div">
 
-          {/* <div className="sidebar left-sidebar">
+          <div className="sidebar left-sidebar">
             <AirQualityInformation />
-          </div> */}
+          </div>
 
-          {/* <div className="world-map-div"> */}
+          <div className="world-map-div">
             <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
-          {/* </div> */}
+          </div>
 
-          {/* <div className="sidebar right-sidebar">
+          <div className="sidebar right-sidebar">
             <PollutantsInformation />
-          </div> */}
+          </div>
 
-        {/* </div> */}
+        </div>
       </div>
     );
 
