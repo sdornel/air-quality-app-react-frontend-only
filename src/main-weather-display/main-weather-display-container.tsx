@@ -22,8 +22,8 @@ const MainWeatherDisplayContainer = () => {
     airQualityData.current = [...dataToJson.results]
   }
 
-  const getMeasurementData = async (locationId: number) => { 
-    const getMeasurementData = `https://api.openaq.org/v2/locations/${locationId}?limit=100&page=1&offset=0&sort=desc&radius=1000&order_by=lastUpdated&dumpRaw=false`;
+  const getMeasurementData = async (locationId: number): Promise<MutableRefObject<{}>> => { 
+    const getMeasurementData = `https://api.openaq.org/v2/locations/${locationId}?limit=1000&page=1&offset=0&sort=desc&radius=1000&order_by=lastUpdated&dumpRaw=false`;
     
     const res = await fetch(getMeasurementData);
     

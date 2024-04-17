@@ -31,132 +31,112 @@ const WorldMap = (props: any) => {
       map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
       map.on('load', (): void => {
-        const features: Feature<Geometry, GeoJsonProperties>[] = []
-        console.log('props.airQualityData.current', props.airQualityData.current);
-        for (let i = 0; i < props.airQualityData.current.length; i++) {
-            // const entityImage = "museum";
-            // eslint-disable-next-line default-case
-            let entityImage;
-            // console.log('props.airQualityData.current[i]', props.airQualityData.current[0]);
-            // leaving the below commented out code. the image/icon should be derived from the entity propery. Currently it seems like the API response is getting null for this so we are just manually setting it to be "museum" for all of them. this is a temporart fix until we are able to resolve the issues with the API response. 
+        const locationMarker = `${process.env.PUBLIC_URL}/images/purple-dot-with-white-outline.png`;
+        map.loadImage(locationMarker, (error, image) => {
+          if (error) throw error;
+          if (!map.hasImage('purple-dot')) map.addImage('purple-dot', image);
 
-            switch(props.airQualityData.current[i].entity) {
-                case 'government':
-                    entityImage = 'museum';
-                    break;
-                case 'community':
-                    entityImage = 'theatre';
-                    break;
-                case 'research':
-                    entityImage = 'rocket';
-                    break;
+          const features: Array<Feature<Geometry, GeoJsonProperties>> = props.airQualityData.current.map(data => ({
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [data.coordinates?.longitude, data.coordinates?.latitude]
+            },
+            properties: {
+                id: data.id,
+                title: data.entity,
+                description: `
+                  <div>
+                    <div className="location-data-div">
+                      <button class="more-info-button" id="more-info-button">More info</button>
+                      <p>id: ${data.id}</p>
+                      <p>Country: ${data.country || 'N/A'}<p/>
+                      <p>City: ${data.city || 'N/A'}<p/>
+                      <p>Location: ${data.name || 'N/A'}<p/>
+                      <p>Sensor Type: ${data.manufacturers[0].modelName}<p/>
+                      <p>Coordinates: ${data.coordinates?.longitude} - ${data.coordinates?.latitude}<p/>
+                      <p>First Updated: ${data.firstUpdated}<p/>
+                      <p>Last Updated: ${data.lastUpdated}<p/>
+                    </div>
+                  </div>
+                `,
+                icon: 'purple-dot'
             }
-            features.push(
-                {
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'Point',
-                        'coordinates': [
-                            props.airQualityData.current[i].coordinates?.longitude, props.airQualityData.current[i].coordinates?.latitude
-                        ]
-                    },
-                    'properties': {
-                        'id': `${props.airQualityData.current[i].id}`,
-                        'title': `${props.airQualityData.current[i].entity}`,
-                        'description': 
-                          // <LocationMeasurements/>
-                        `
-                            <div>
-                                <strong>${props.airQualityData.current[i].entity}</strong>
-                                <div className="location-data-div">
-                                  <button class="more-info-button" id="more-info-button">More info</button>
-                                  <p>id: ${props.airQualityData.current[i].id}</p>
-                                  <p>Country: ${props.airQualityData.current[i].country || 'N/A'}<p/>
-                                  <p>City: ${props.airQualityData.current[i].city || 'N/A'}<p/>
-                                  <p>Location: ${props.airQualityData.current[i].name || 'N/A'}<p/>
-                                  <p>Sensor Type: ${props.airQualityData.current[i].manufacturers[0].modelName}<p/>
-                                  <p>Coordinates: ${props.airQualityData.current[i].coordinates?.longitude} - ${props.airQualityData.current[i].coordinates?.latitude}<p/>
-                                  <p>First Updated: ${props.airQualityData.current[i].firstUpdated}<p/>
-                                  <p>Last Updated: ${props.airQualityData.current[i].lastUpdated}<p/>
-                                </div>
-                            </div>
-                            `
-                            ,
-                        'icon': `${entityImage}`
-                    }
-                },
-            )
-        }
-
-        const places: string | Feature<Geometry, GeoJsonProperties> | FeatureCollection<Geometry, GeoJsonProperties> | undefined = {
+          }));
+          
+          const places: string | Feature<Geometry, GeoJsonProperties> | FeatureCollection<Geometry, GeoJsonProperties> | undefined = {
             'type': 'FeatureCollection',
             'features': features,
-        };
-
-        // Add a GeoJSON source containing place coordinates and information.
-        map.addSource('places', {
+          };
+          
+          // Add a GeoJSON source containing place coordinates and information.
+          map.addSource('places', {
             'type': 'geojson',
             'data': places
-        });
+          });
 
-        for (const feature of places.features) {
-          const symbol: string = feature.properties?.icon;
-          const LayerID: string = `poi-${symbol}`;
-          // Add a layer for this symbol type if it hasn't been added already.
-          if (!map.getLayer(LayerID)) {
+          features.forEach(feature => {
+            const layerID = `poi-${feature.properties.icon}`;
+            if (!map.getLayer(layerID)) {
               map.addLayer({
-                  'id': LayerID,
-                  'type': 'symbol',
-                  'source': 'places',
-                  'layout': {
-                      'icon-image': `${symbol}-15`,
-                      'icon-allow-overlap': true
-                  },
-                  'filter': ['==', 'icon', symbol]
-                });
-                
-                // When a click event occurs on a feature in the places layer, open a popup at the
-                // location of the feature, with description HTML from its properties.
-                map.on("click", LayerID, (e:  { features?: EventData; lngLat: EventData }) => {
-                  if (e.features.length) {
-                    const coordinates = e.features[0].geometry.coordinates;
-                    const description = e.features[0].properties.description;
-                    selectedLocationId.current = Number(e.features[0].properties.id);
-                    // Ensure that if the map is zoomed out such that multiple
-                    // copies of the feature are visible, the popup appears
-                    // over the copy being pointed to.
-                    while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                      coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                    }
-
-                    popupRef.current
-                      .setLngLat(coordinates)
-                      .setHTML(description)
-                      .addTo(map)
+                  id: layerID,
+                  type: 'symbol',
+                  source: 'places',
+                  layout: {
+                      'icon-image': 'purple-dot',
+                      'icon-allow-overlap': true,
+                      // 'icon-size': 0.03
+                      'icon-size': [
+                        "interpolate", ["linear"], ["zoom"],
+                        1, 0.02,  // At zoom level 1, icon size is 0.02
+                        22, 0.15   // At zoom level 22, icon size is 0.15
+                      ]
                   }
-                  const seeMoreButton = document.getElementById('more-info-button');
-                  seeMoreButton?.addEventListener('click', async () => {
-                    props.onLoad();
-                    const measurementData = await props.getMeasurementData(selectedLocationId.current);
-                    props.navigate(`/measurements/${Number(selectedLocationId.current)}`, {
-                      state: {
-                        measurementData,
-                      },
-                    });
+              });
+
+              map.on("click", layerID, (e:  { features?: EventData; lngLat: EventData }) => {
+                if (e.features.length) {
+                  const coordinates = e.features[0].geometry.coordinates;
+                  const description = e.features[0].properties.description;
+                  selectedLocationId.current = Number(e.features[0].properties.id);
+                  // Ensure that if the map is zoomed out such that multiple
+                  // copies of the feature are visible, the popup appears
+                  // over the copy being pointed to.
+                  while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                  }
+
+                  popupRef.current
+                    .setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(map)
+                }
+                const seeMoreButton = document.getElementById('more-info-button');
+                seeMoreButton?.addEventListener('click', async () => {
+                  props.onLoad();
+                  const measurementDataPromise = await props.getMeasurementData(selectedLocationId.current);
+                  const measurementData = await measurementDataPromise.current;
+
+                  props.navigate(`/measurements/${selectedLocationId.current}`, {
+                    state: {
+                      measurementData,
+                    },
                   });
                 });
+              });
 
-                // Change the cursor to a pointer when the mouse is over the places layer.
-                map.on('mouseenter', LayerID, (): void => {
-                  map.getCanvas().style.cursor = 'pointer';
-                });
-                
-                // Change it back to a pointer when it leaves.
-                map.on('mouseleave', LayerID, (): void => {
-                    map.getCanvas().style.cursor = '';
-                });
-              }
+              // Change the cursor to a pointer when the mouse is over the places layer.
+              map.on('mouseenter', layerID, (): void => {
+                map.getCanvas().style.cursor = 'pointer';
+              });
+              
+              // Change it back to a pointer when it leaves.
+              map.on('mouseleave', layerID, (): void => {
+                  map.getCanvas().style.cursor = '';
+              });
             }
+          });
+        });
     });
   
       map.on('move', (): void => {
@@ -165,29 +145,9 @@ const WorldMap = (props: any) => {
         setZoom(Number(map.getZoom().toFixed(2)));
       });
       setMap(map);
-      // Clean up on unmount
-      return () => map.remove();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  
-  const toggleVisibility = (event: ChangeEvent<HTMLInputElement>): void => {
-    let layerId: string = '';
-    switch(event.target.name) {
-      case CheckboxButton.Community:
-        layerId = 'poi-theatre'
-        break;
-      case CheckboxButton.Research:
-        layerId = 'poi-rocket'
-        break;
-      case CheckboxButton.Government:
-        layerId = 'poi-museum'
-        break;
-    }
-    map.setLayoutProperty(
-      layerId,
-      'visibility',
-      event.target.checked ? 'visible' : 'none',
-    )
-  }
+
+      return () => map.remove(); // Clean up on unmount
+    }, []); // only run once
 
   return (
     <div>
@@ -197,7 +157,6 @@ const WorldMap = (props: any) => {
         </div>
       </div>
       <div className='map-container' ref={mapContainerRef} />
-      <Checkboxes toggleVisibility={toggleVisibility}/>
     </div>
   );
 };
