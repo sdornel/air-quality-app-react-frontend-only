@@ -44,7 +44,6 @@ const WorldMap = (props: any) => {
             },
             properties: {
                 id: data.id,
-                title: data.entity,
                 description: `
                   <div>
                     <div className="location-data-div">
@@ -75,7 +74,9 @@ const WorldMap = (props: any) => {
             'data': places
           });
 
-          features.forEach(feature => {
+          features.forEach((feature: Feature<Geometry, {
+            [name: string]: any;
+          }>) => {
             const layerID = `poi-${feature.properties.icon}`;
             if (!map.getLayer(layerID)) {
               map.addLayer({
