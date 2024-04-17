@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import WorldMap from './world-map/world-map';
 import './main-weather-display.css';
 import React from 'react';
+import AirQualityInformation from './air-quality-information/air-quality-information';
+import PollutantsInformation from './pollutants-information/pollutants-information';
 
 const MainWeatherDisplayContainer = () => {
   const dataUrl = 'https://api.openaq.org/v2/locations?limit=1000&page=1&offset=0&sort=desc&radius=1000&order_by=lastUpdated&&dumpRaw=false';
@@ -52,18 +54,17 @@ const MainWeatherDisplayContainer = () => {
         <div className="main-weather-display-container-div">
 
           <div className="sidebar left-sidebar">
-            {/* this becomes a component */}
-            <h2>Air Quality Insights</h2>
-            <p>Learn why monitoring air quality is crucial for health and environment.</p>
+            <AirQualityInformation />
           </div>
 
-          <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
+          <div className="world-map-div">
+            <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
+          </div>
 
           <div className="sidebar right-sidebar">
-            {/* this becomes a component */}
-            <h2>Understanding PM Levels</h2>
-            <p>PM2.5 and PM10 are common air pollutants that are monitored worldwide.</p>
+            <PollutantsInformation />
           </div>
+
         </div>
       </div>
     );
