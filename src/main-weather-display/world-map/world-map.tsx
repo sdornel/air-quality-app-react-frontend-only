@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, SetStateAction, Dispatch, MutableRefObject } from 'react';
-import './map-of-usa.css';
+import './world-map.css';
 import mapboxgl, { EventData, Popup } from 'mapbox-gl';
 import { FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
 import { Feature } from 'geojson';
