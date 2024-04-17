@@ -46,18 +46,19 @@ const WorldMap = (props: any) => {
             },
             properties: {
                 id: data.id,
+                // <button class="more-info-button" id="more-info-button">More info</button> goes under location-data-div
                 description: `
                   <div style="text-align: left;">
                     <div className="location-data-div">
-                      <button class="more-info-button" id="more-info-button">More info</button>
+                      
                       <p>Latest PM2.5 Level: ${data.parameters[0].average.toFixed(2)} µg/m³</p>
                       <p>Country: ${data.country || 'N/A'}<p/>
                       <p>City: ${data.city || 'N/A'}<p/>
                       <p>Location: ${data.name || 'N/A'}<p/>
                       <p>Sensor Type: ${data.manufacturers[0].modelName}<p/>
-                      <p>Coordinates: ${data.coordinates?.longitude} - ${data.coordinates?.latitude}<p/>
-                      <p>First Updated: ${data.firstUpdated}<p/>
-                      <p>Last Updated: ${data.lastUpdated}<p/>
+                      <p>Coordinates: ${data.coordinates?.longitude.toFixed(3)} | ${data.coordinates?.latitude.toFixed(3)}<p/>
+                      <p>First Updated: ${data.firstUpdated.split('T')[0]}<p/>
+                      <p>Last Updated: ${data.lastUpdated.split('T')[0]}<p/>
                     </div>
                   </div>
                 `,
