@@ -29,3 +29,23 @@
     left: 45%;
     top: 65%;
 }
+
+.main-weather-display-container-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    height: 100%;
+}
+
+.sidebar {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.WorldMap {
+    flex: 3;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}

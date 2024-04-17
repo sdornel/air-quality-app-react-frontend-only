@@ -46,9 +46,25 @@ const MainWeatherDisplayContainer = () => {
     )
   } else {
     return (
-      <div className="main-weather-display-container-div">
+      <div>
         <h1 className="main-air-quality-display-title">Air Quality Application</h1>
-        <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
+      
+        <div className="main-weather-display-container-div">
+
+          <div className="sidebar left-sidebar">
+            {/* this becomes a component */}
+            <h2>Air Quality Insights</h2>
+            <p>Learn why monitoring air quality is crucial for health and environment.</p>
+          </div>
+
+          <WorldMap airQualityData={airQualityData} getMeasurementData={getMeasurementData} navigate={navigate} onLoad={onLoad} />
+
+          <div className="sidebar right-sidebar">
+            {/* this becomes a component */}
+            <h2>Understanding PM Levels</h2>
+            <p>PM2.5 and PM10 are common air pollutants that are monitored worldwide.</p>
+          </div>
+        </div>
       </div>
     );
 
