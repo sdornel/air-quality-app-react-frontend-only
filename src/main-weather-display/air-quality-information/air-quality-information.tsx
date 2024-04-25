@@ -13,14 +13,6 @@ const AirQualityInformation = (props: any) => {
                 regulatory bodies have established air quality guidelines for PM2.5
                 and PM10.
             </p>
-
-            {/* <p>
-                Reducing exposure to PM is important for public health, particularly for vulnerable
-                groups such as children, the elderly, and those with pre-existing respiratory or
-                cardiovascular diseases. Measures to reduce PM emissions include promoting cleaner
-                transportation, enforcing industrial emissions standards, and supporting policies that
-                encourage the reduction of air pollution from all sources.
-            </p> */}
         </div>
     );
 };

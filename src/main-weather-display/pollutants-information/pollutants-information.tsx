@@ -12,13 +12,6 @@ const PollutantsInformation = (props: any) => {
                 and two of the most commonly monitored sizes are PM2.5 and PM10. These particles are 
                 measured in micrometers (µm).
             </p>
-
-            {/* <p>
-                Globally, PM levels are monitored to ensure they do not exceed set standards which are 
-                established to protect public health. The World Health Organization (WHO), the United 
-                States Environmental Protection Agency (EPA), and other regulatory bodies have established 
-                air quality guidelines or standards for PM2.5 and PM10.
-            </p> */}
         </div>
     );
 };
